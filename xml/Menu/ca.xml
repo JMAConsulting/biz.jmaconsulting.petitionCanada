@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<menu>
+  <item>
+    <path>civicrm/represent</path>
+    <page_callback>CRM_Ca_Page_Geocode</page_callback>
+    <title>Geocode</title>
+    <access_callback>1</access_callback>
+    <is_public>true</is_public>
+  </item>
+</menu>
