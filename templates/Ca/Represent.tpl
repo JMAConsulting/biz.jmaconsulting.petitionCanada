@@ -11,6 +11,7 @@ CRM.$(function($) {
       "postal_code": "postal_code-Primary"
     };
     var address = {};
+    var reps = {};
     $.each( params, function( key, value ) {
       if (key == "country" || key == "state_province" || key == "state_province_id") {
         address[key] = $("#" + value +" option:selected").val();
@@ -19,7 +20,8 @@ CRM.$(function($) {
         address[key] = $("#" + value).val();
       }
     });
-    var geoCode = getGeocode(address);
+    var geocode = getGeocode(address);
+    getRepresentatives(geocode);
   });
 
   function getGeocode(address) {
@@ -40,6 +42,58 @@ CRM.$(function($) {
     var response = $.parseJSON(geocode);
     return response;
   }
+
+  function getRepresentatives(geocode) {
+    $body = $("#representatives");
+    var dataUrl = {/literal}"{crmURL p='civicrm/getrepresentatives' h=0 }"{literal};
+    $body.addClass("dataTables_processing");
+    $.ajax({
+      url: dataUrl,
+      method: 'POST',
+      dataType: 'json',
+      data: {
+        geocode: geocode
+      },
+      success: function(data) {
+        if (data) {
+          var trHTML = '<table style="margin-left:35px">';
+          $.each(data, function (i, item) {
+            trHTML += '<tr><td style="width: 160px;"><div class="avatar" style="background-image: url(' + item.photo_url + ')"></div></td>';
+            trHTML += '<td style="padding-top: 20px;"><div><strong><a href='+ item.url +'>' + item.name + '</a></strong></div>';
+            trHTML += '<div><span>' + item.party_name + ' ' + item.elected_office + '</span></div>';
+            trHTML += '<div><a href=mailto:'+ item.email +'>' + item.email + '</a></div>';
+            trHTML += '<div><span>' + item.district_name + '</span></div></td></tr>';
+          });
+          trHTML += '</table>';
+        }
+        else {
+          trHTML = '<div><span><h3 align-text="center">No Representatives found!</h3></span></div>';
+        }
+        $('#representatives').html(trHTML);
+      },
+      complete: function(){
+        $body.removeClass("dataTables_processing");
+      }
+    });
+  }
 });
 </script>
 {/literal}
+
+<style>
+
+.avatar {ldelim}
+    overflow: hidden;
+    width: 100px;
+    height: 0;
+    margin-bottom: 20px;
+    padding-top: 100px;
+    border-radius: 100px;
+    border: 3px solid #eee;
+    background-color: #eee;
+    background-position: 0% 17%;
+    background-repeat: no-repeat;
+    background-size: 100px auto;
+{rdelim}
+
+<style>
