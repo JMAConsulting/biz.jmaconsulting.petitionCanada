@@ -118,6 +118,30 @@ function ca_civicrm_buildForm($formName, &$form) {
     CRM_Core_Region::instance('form-body')->add(array(
       'template' => 'Ca/Represent.tpl',
     ));
+
+    $form->add('hidden', 'representative_emails', ts('Representative Emails'), array('readonly' => TRUE), FALSE);
+    $form->add('wysiwyg', 'draft_email', ts('Email'), NULL);
   }
 }
 
+/**
+ * Implementation of hook_civicrm_postProcess
+ *
+ *
+ */
+function ca_civicrm_postProcess($formName, &$form) {
+  if ($formName == "CRM_Campaign_Form_Petition_Signature") {
+    if ($emails = CRM_Utils_Array::value('representative_emails', $form->_submitValues)) {
+      $result = civicrm_api3('UFField', 'get', array(
+        'sequential' => 1,
+        'return' => array("help_pre"),
+        'uf_group_id' => "Petition_Profile_14",
+        'field_type' => "Formatting",
+        'label' => "Representative Email",
+      ));
+      
+      $emailText = $result['values']['help_pre'];
+      
+    }
+  }
+}

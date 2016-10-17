@@ -1,6 +1,16 @@
+<div id="draft_email" class="crm-section editrow_draft_email-section form-item">
+  <div class="label">
+    <label for="draft_email">{$form.draft_email.label}</label>
+  </div>
+  <div class="content">
+    {$form.draft_email.html}
+  </div>
+</div>
+
 {literal}
 <script type="text/javascript">
 CRM.$(function($) {
+  $("#draft_email").insertAfter("#emailtext");
   $("input[name='postal_code-Primary']").blur( function() {
     var params = {
       "street_address": "street_address-Primary",
@@ -45,6 +55,8 @@ CRM.$(function($) {
 
   function getRepresentatives(geocode) {
     $body = $("#representatives");
+    var repEmails = [];
+    $("input[name='representative_emails']").val('');
     var dataUrl = {/literal}"{crmURL p='civicrm/getrepresentatives' h=0 }"{literal};
     $body.addClass("dataTables_processing");
     $.ajax({
@@ -58,6 +70,7 @@ CRM.$(function($) {
         if (data) {
           var trHTML = '<table style="margin-left:35px">';
           $.each(data, function (i, item) {
+	    repEmails.push(item.email);
             trHTML += '<tr><td style="width: 160px;"><div class="avatar" style="background-image: url(' + item.photo_url + ')"></div></td>';
             trHTML += '<td style="padding-top: 20px;"><div><strong><a href='+ item.url +'>' + item.name + '</a></strong></div>';
             trHTML += '<div><span>' + item.party_name + ' ' + item.elected_office + '</span></div>';
@@ -65,11 +78,12 @@ CRM.$(function($) {
             trHTML += '<div><span>' + item.district_name + '</span></div></td></tr>';
           });
           trHTML += '</table>';
+    	  $("input[name='representative_emails']").val(repEmails.join());
         }
         else {
           trHTML = '<div><span><h3 align-text="center">No Representatives found!</h3></span></div>';
         }
-        $('#representatives').html(trHTML);
+        $body.html(trHTML);
       },
       complete: function(){
         $body.removeClass("dataTables_processing");
