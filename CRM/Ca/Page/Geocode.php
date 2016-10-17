@@ -38,13 +38,16 @@ class CRM_Ca_Page_Geocode extends CRM_Core_Page {
   function run() {
     $data = $_POST;
     if (isset($data['address'])) {
+      if (CRM_Utils_Array::value('country', $data['address'])) {
+        $data['address']['country'] = CRM_Core_PseudoConstant::country($data['address']['country']);
+      }
       CRM_Utils_Geocode_Google::format($data['address']);
       if (isset($data['address']['geo_code_1']) && isset($data['address']['geo_code_2'])) {
         $json = array($data['address']['geo_code_1'], $data['address']['geo_code_2']);
         echo json_encode($json);
         exit;
       }
-    }    
+    }
   }
 
 }
