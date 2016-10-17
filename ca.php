@@ -155,6 +155,8 @@ function ca_civicrm_postProcess($formName, &$form) {
 
       $sent = CRM_Utils_Mail::send($params);
       if ($sent) {
+        $message .= "<br/>
+          <b>Email also sent to representatives:</b> {$form->_submitValues['representative_emails']}";
         // Create activity
         $activityParams = array(
           'activity_name' => 'Email',
