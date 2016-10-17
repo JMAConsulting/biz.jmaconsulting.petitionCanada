@@ -1,5 +1,7 @@
 <?php
 
+define('ENDPOINT', 'https://represent.opennorth.ca/');
+
 require_once 'ca.civix.php';
 
 /**
