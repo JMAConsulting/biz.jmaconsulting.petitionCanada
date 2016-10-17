@@ -1,3 +1,4 @@
+{if !$duplicate}
 <div id="draft_email" class="crm-section editrow_draft_email-section form-item">
   <div class="label">
     <label for="draft_email">{$form.draft_email.label}</label>
@@ -6,6 +7,7 @@
     {$form.draft_email.html}
   </div>
 </div>
+{/if}
 
 {literal}
 <script type="text/javascript">

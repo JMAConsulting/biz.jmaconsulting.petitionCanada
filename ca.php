@@ -119,14 +119,13 @@ function ca_civicrm_buildForm($formName, &$form) {
       'template' => 'Ca/Represent.tpl',
     ));
 
-    $form->add('hidden', 'representative_emails', ts('Representative Emails'), array('readonly' => TRUE), FALSE);
+    $form->add('hidden', 'representative_emails', NULL, array('readonly' => TRUE), FALSE);
     $form->add('wysiwyg', 'draft_email', ts('Email'), NULL);
   }
 }
 
 /**
  * Implementation of hook_civicrm_postProcess
- *
  *
  */
 function ca_civicrm_postProcess($formName, &$form) {
@@ -135,13 +134,41 @@ function ca_civicrm_postProcess($formName, &$form) {
       $result = civicrm_api3('UFField', 'get', array(
         'sequential' => 1,
         'return' => array("help_pre"),
-        'uf_group_id' => "Petition_Profile_14",
+        'uf_group_id' => "Petition_Profile_17",
         'field_type' => "Formatting",
         'label' => "Representative Email",
       ));
-      
-      $emailText = $result['values']['help_pre'];
-      
+
+      $message = $result['values'][0]['help_pre'];
+
+      if (CRM_Utils_Array::value('draft_email', $form->_submitValues)) {
+        $message .= "<br/>";
+        $message .= $form->_submitValues['draft_email'];
+      }
+      // Send the email.
+      $params = array(
+        'toEmail' => $form->_submitValues['representative_emails'],
+        'from' => $form->_submitValues['email-Primary'],
+        'subject' => $form->petition['title'] . ' - Email',
+        'html' => $message,
+      );
+
+      $sent = CRM_Utils_Mail::send($params);
+      if ($sent) {
+        // Create activity
+        $activityParams = array(
+          'activity_name' => 'Email',
+          'subject' => $form->petition['title'] . ' - Email',
+          'status_id' => 'Completed',
+          'activity_date_time' => date('YmdHis'),
+          'source_contact_id' => $form->_contactId,
+          'target_contact_id' => $form->_contactId,
+          'assignee_contact_id' => $form->_contactId,
+          'details' => $message,
+          'version' => 3,
+        );
+        civicrm_api3('Activity', 'create', $activityParams);
+      }
     }
   }
 }
