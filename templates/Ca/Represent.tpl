@@ -6,6 +6,10 @@
   <div class="content">
     {$form.draft_email.html}
   </div>
+  <div class="content">
+    {$form.is_subscribe.html}&nbsp;{$form.is_subscribe.label}
+  </div>
+  <div class="clear"></div>
 </div>
 {/if}
 
