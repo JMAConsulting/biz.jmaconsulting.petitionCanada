@@ -12,7 +12,7 @@
 {literal}
 <script type="text/javascript">
 CRM.$(function($) {
-  $("#draft_email").insertAfter("#emailtext");
+  $("#draft_email").insertBefore(".crm-submit-buttons");
   $("input[name='postal_code-Primary']").blur( function() {
     var params = {
       "street_address": "street_address-Primary",
