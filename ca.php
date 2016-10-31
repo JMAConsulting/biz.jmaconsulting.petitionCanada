@@ -262,10 +262,24 @@ function ca_civicrm_buildForm($formName, &$form) {
       'template' => 'Ca/Represent.tpl',
     ));
 
+    $template = NULL;
+    $result = civicrm_api3('MessageTemplate', 'get', array(
+      'sequential' => 1,
+      'return' => array("msg_html"),
+      'msg_title' => "OpenNorth",
+    ));
+    if ($result['count'] > 0) {
+      $template = $result['values'][0]['msg_html'];
+    }
+
     $form->add('hidden', 'representative_emails', NULL, array('readonly' => TRUE), FALSE);
     $form->add('wysiwyg', 'draft_email', ts('Email'), NULL);
     $form->add('checkbox', 'is_subscribe', ts('Do you wish to receive further communications?'));
-    $form->setDefaults(array('is_subscribe' => TRUE));
+    $defaults = array('is_subscribe' => TRUE);
+    if ($template) {
+      $defaults['draft_email'] = $template;
+    }
+    $form->setDefaults($defaults);
   }
 }
 
