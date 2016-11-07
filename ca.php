@@ -273,7 +273,7 @@ function ca_civicrm_buildForm($formName, &$form) {
     }
 
     $form->add('hidden', 'representative_emails', NULL, array('readonly' => TRUE), FALSE);
-    $form->add('wysiwyg', 'draft_email', ts('Email'), NULL);
+    $form->addWysiwyg('draft_email', ts('Email'), NULL);
     $form->add('checkbox', 'is_subscribe', ts('Do you wish to receive further communications?'));
     $defaults = array('is_subscribe' => TRUE);
     if ($template) {

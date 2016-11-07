@@ -1,5 +1,5 @@
 {if !$duplicate}
-<div id="draft_email" class="crm-section editrow_draft_email-section form-item">
+<div id="draft_email_block" class="crm-section editrow_draft_email-section form-item">
   <div class="label">
     <label for="draft_email">{$form.draft_email.label}</label>
   </div>
@@ -16,7 +16,7 @@
 {literal}
 <script type="text/javascript">
 CRM.$(function($) {
-  $("#draft_email").insertBefore(".crm-submit-buttons");
+  $("#draft_email_block").insertBefore(".crm-submit-buttons");
   $("input[name='postal_code-Primary']").blur( function() {
     var params = {
       "street_address": "street_address-Primary",
@@ -64,7 +64,7 @@ CRM.$(function($) {
     var repEmails = [];
     $("input[name='representative_emails']").val('');
     var dataUrl = {/literal}"{crmURL p='civicrm/getrepresentatives' h=0 }"{literal};
-    $body.addClass("dataTables_processing");
+    $body.addClass("blockUI blockOverlay");
     $.ajax({
       url: dataUrl,
       method: 'POST',
@@ -74,7 +74,7 @@ CRM.$(function($) {
       },
       success: function(data) {
         if (data) {
-          var trHTML = '<table style="margin-left:35px">';
+          var trHTML = '<table>';
           $.each(data, function (i, item) {
 	    repEmails.push(item.email);
             trHTML += '<tr><td style="width: 160px;"><div class="avatar" style="background-image: url(' + item.photo_url + ')"></div></td>';
@@ -92,7 +92,7 @@ CRM.$(function($) {
         $body.html(trHTML);
       },
       complete: function(){
-        $body.removeClass("dataTables_processing");
+        $body.removeClass("blockUI blockOverlay");
       }
     });
   }
