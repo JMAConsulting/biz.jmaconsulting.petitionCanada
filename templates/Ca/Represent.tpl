@@ -82,13 +82,17 @@ CRM.$(function($) {
 	    if (item.party_name) {
               trHTML += item.party_name;
             }
+            if (item.party_name && item.elected_office) {
+              trHTML += ', ';
+            }
 	    if (item.elected_office) {
-              trHTML += ', ' + item.elected_office;
+              trHTML += item.elected_office;
             }
             trHTML += '</span>';
 	    if (item.email) {
-              trHTML += ' (<a href=mailto:'+ item.email +'>' + item.email + '</a>)</dd></dl>';
+              trHTML += ' (<a href=mailto:'+ item.email +'>' + item.email + '</a>)';
             }
+	    trHTML += '</dd></dl>';
           });
     	  $("input[name='representative_emails']").val(repEmails.join());
         }
