@@ -289,17 +289,38 @@ function ca_civicrm_buildForm($formName, &$form) {
  */
 function ca_civicrm_postProcess($formName, &$form) {
   if ($formName == "CRM_Campaign_Form_Petition_Signature") {
-    if ($emails = CRM_Utils_Array::value('representative_emails', $form->_submitValues)) {
-      // Add to newsletter group.
-      if (CRM_Utils_Array::value('is_subscribe', $form->_submitValues)) {
-        $group = civicrm_api3('GroupContact', 'create', array(
-          'sequential' => 1,
-          'group_id' => 'petition_signature_newsletter',
-          'contact_id' => $form->_contactId,
-          'status' => 'Added',
-        ));
-      }
+    $targets = $submittedTargets = $master = array();
+    // Add to newsletter group.
+    if (CRM_Utils_Array::value('is_subscribe', $form->_submitValues)) {
+      $group = civicrm_api3('GroupContact', 'create', array(
+        'sequential' => 1,
+        'group_id' => 'petition_signature_newsletter',
+        'contact_id' => $form->_contactId,
+        'status' => 'Added',
+      ));
+    }
 
+    // Get fixed group targets.
+    $fixed = civicrm_api3('GroupContact', 'get', array(
+      'sequential' => 1,
+      'return' => array("contact_id"),
+      'group_id' => "Petition_Targets",
+      'status' => "Added",
+    ));
+
+    if ($fixed['count'] > 0) {
+      foreach ($fixed['values'] as $contact) {
+        $targets[] = CRM_Contact_BAO_Contact::getPrimaryEmail($contact['contact_id']);
+      }
+    }
+    if ($emails = CRM_Utils_Array::value('representative_emails', $form->_submitValues)) {
+      $submittedTargets = explode(',', $emails);
+    }
+    $targets = array_filter($targets);
+    // Remove duplicate emails and format.
+    $master = implode(',', array_unique(array_merge($submittedTargets, $targets)));
+
+    if (!empty($master)) {
       // Get frozen email text from profile.
       $result = civicrm_api3('UFField', 'get', array(
         'sequential' => 1,
@@ -316,10 +337,9 @@ function ca_civicrm_postProcess($formName, &$form) {
         $message .= "<br/>";
         $message .= $form->_submitValues['draft_email'];
       }
-
       // Send the email.
       $params = array(
-        'toEmail' => $form->_submitValues['representative_emails'],
+        'toEmail' => $master,
         'from' => $form->_submitValues['email-Primary'],
         'subject' => $form->petition['title'] . ' - Email',
         'html' => $message,
@@ -328,7 +348,7 @@ function ca_civicrm_postProcess($formName, &$form) {
       $sent = CRM_Utils_Mail::send($params);
       if ($sent) {
         $message .= "<br/>
-          <b>Email also sent to representatives:</b> {$form->_submitValues['representative_emails']}";
+          <b>Email also sent to representatives:</b> {$master}";
         // Create activity.
         $activityParams = array(
           'activity_name' => 'Email',
