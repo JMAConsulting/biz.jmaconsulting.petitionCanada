@@ -74,16 +74,22 @@ CRM.$(function($) {
       },
       success: function(data) {
         if (data) {
-          var trHTML = '<table>';
+          var trHTML = '';
           $.each(data, function (i, item) {
 	    repEmails.push(item.email);
-            trHTML += '<tr><td style="width: 160px;"><div class="avatar" style="background-image: url(' + item.photo_url + ')"></div></td>';
-            trHTML += '<td style="padding-top: 20px;"><div><strong><a href='+ item.url +'>' + item.name + '</a></strong></div>';
-            trHTML += '<div><span>' + item.party_name + ' ' + item.elected_office + '</span></div>';
-            trHTML += '<div><a href=mailto:'+ item.email +'>' + item.email + '</a></div>';
-            trHTML += '<div><span>' + item.district_name + '</span></div></td></tr>';
+            trHTML += '<dl><dt><strong><a href='+ item.url +'>' + item.name + '</a></strong></dt>';
+            trHTML += '<dd><span>';
+	    if (item.party_name) {
+              trHTML += item.party_name;
+            }
+	    if (item.elected_office) {
+              trHTML += ', ' + item.elected_office;
+            }
+            trHTML += '</span>';
+	    if (item.email) {
+              trHTML += ' (<a href=mailto:'+ item.email +'>' + item.email + '</a>)</dd></dl>';
+            }
           });
-          trHTML += '</table>';
     	  $("input[name='representative_emails']").val(repEmails.join());
         }
         else {
@@ -99,21 +105,3 @@ CRM.$(function($) {
 });
 </script>
 {/literal}
-
-<style>
-
-.avatar {ldelim}
-    overflow: hidden;
-    width: 100px;
-    height: 0;
-    margin-bottom: 20px;
-    padding-top: 100px;
-    border-radius: 100px;
-    border: 3px solid #eee;
-    background-color: #eee;
-    background-position: 0% 17%;
-    background-repeat: no-repeat;
-    background-size: 100px auto;
-{rdelim}
-
-<style>
