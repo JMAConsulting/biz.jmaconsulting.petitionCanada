@@ -1,6 +1,9 @@
 <?php
 
 define('ENDPOINT', 'https://represent.opennorth.ca/');
+define('CON', 'custom_1');
+define('AFFN', 'custom_2');
+define('TITLE', 'custom_3');
 
 require_once 'ca.civix.php';
 

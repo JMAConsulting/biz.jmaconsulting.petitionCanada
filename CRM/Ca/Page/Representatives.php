@@ -37,17 +37,44 @@ class CRM_Ca_Page_Representatives extends CRM_Core_Page {
 
   function run() {
     $geocode = $_POST['geocode'];
-    $representatives = array();
+    $representatives = $targets = $reps = array();
     $url = ENDPOINT . "/representatives/?point=" . $geocode[0] . "," . $geocode[1];
+
+    // Get fixed group targets.
+    $fixed = civicrm_api3('GroupContact', 'get', array(
+      'sequential' => 1,
+      'return' => array("contact_id"),
+      'group_id' => "Petition_Targets",
+      'status' => "Added",
+    ));
+
+    if ($fixed['count'] > 0) {
+      foreach ($fixed['values'] as $contact) {
+        $targets[] = CRM_Ca_BAO_Represent::getContactDetails($contact['contact_id']);
+      }
+    }
 
     $representatives = CRM_Ca_BAO_Represent::getInfo($url);
     if (!empty($representatives) && $representatives->meta->total_count > 0) {
-      echo json_encode($representatives->objects);
+      foreach ($representatives->objects as $key => $values) {
+        $reps[] = array(
+          'display_name' => $values->name,
+          'url' => $values->url,
+          'district_name' => $values->district_name,
+          'party_name' => $values->party_name,
+          'elected_office' => $values->elected_office,
+          'email' => $values->email,
+        );
+      }
+    }
+    $master =  array_merge($targets, $reps);
+    if (!empty($master)) {
+      echo json_encode($master);
     }
     else {
       echo 0;
     }
-    exit;
+    CRM_Utils_System::civiExit();
   }
 
 }
