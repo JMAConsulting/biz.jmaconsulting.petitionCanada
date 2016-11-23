@@ -46,7 +46,7 @@ CRM.$(function($) {
 
   function getGeocode(address) {
     if ($.isEmptyObject(address)) {
-      alert("Please fill out the address fields to get a list of representatives.");
+      alert("Please fill out your address to add your local representatives as recipients.");
       return FALSE;
     }
     var dataUrl = {/literal}"{crmURL p='civicrm/represent' h=0 }"{literal};
@@ -108,7 +108,7 @@ CRM.$(function($) {
     	  $("input[name='representative_emails']").val(repEmails.join());
         }
         else {
-          trHTML = '<div><span><h3 align-text="center">No Representatives found!</h3></span></div>';
+          trHTML = '<div><span><h3 align-text="center">No local representatives found.</h3></span></div>';
         }
         $body.html(trHTML);
       },
