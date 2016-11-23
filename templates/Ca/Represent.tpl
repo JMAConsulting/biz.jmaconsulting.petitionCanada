@@ -1,3 +1,7 @@
+{if $duplicate == 'confirmed'}
+  If you don't find it, check your spam folder.
+{/if}
+
 {if !$duplicate}
 <div id="draft_email" class="crm-section editrow_draft_email-section form-item">
   <div class="label">
