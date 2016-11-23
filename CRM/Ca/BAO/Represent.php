@@ -45,4 +45,41 @@ class CRM_Ca_BAO_Represent {
     return json_decode($response);
   }
 
+  public static function getContactDetails($cid) {
+    if (empty($cid)) {
+      return;
+    }
+    $returnProperties = array(
+      "display_name",
+      "email",
+      CON,
+      AFFN,
+      TITLE,
+    );
+    $result = civicrm_api3('Contact', 'get', array(
+      'sequential' => 1,
+      'return' => $returnProperties,
+      'id' => $cid,
+    ));
+    if ($result['count'] > 0) {
+      foreach ($result['values'] as $contact) {
+        foreach ($contact as $key => $values) {
+          if ($key == CON) {
+            $details['district_name'] = $values;
+          }
+          elseif ($key == AFFN) {
+            $details['party_name'] = $values;
+          }
+          elseif ($key == TITLE) {
+            $details['elected_office'] = $values;
+          }
+          else {
+            $details[$key] = $values;
+          }
+        }
+      }
+    }
+    return $details;
+  }
+
 }

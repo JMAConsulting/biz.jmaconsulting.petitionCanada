@@ -81,8 +81,15 @@ CRM.$(function($) {
           var trHTML = '';
           $.each(data, function (i, item) {
 	    repEmails.push(item.email);
-            trHTML += '<dl><dt><strong><a href='+ item.url +'>' + item.name + '</a></strong></dt>';
-            trHTML += '<dd><span>';
+            trHTML += '<dl><dt><strong>';
+	    if (item.url) {
+              trHTML += '<a href='+ item.url +'>';
+            }
+	    trHTML += item.display_name;
+	    if (item.url) {
+	      trHTML += '</a>';
+            }
+            trHTML += '</strong></dt><dd><span>';
 	    if (item.party_name) {
               trHTML += item.party_name;
             }
