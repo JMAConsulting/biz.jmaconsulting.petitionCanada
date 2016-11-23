@@ -255,12 +255,13 @@ function ca_civicrm_alterSettingsFolders(&$metaDataFolders = NULL) {
  */
 function ca_civicrm_buildForm($formName, &$form) {
   if ($formName == "CRM_Campaign_Form_Petition_Signature") {
-    if (isset($_COOKIE['signed_' . $form->_surveyId])) {
-      return;
-    }
     CRM_Core_Region::instance('form-body')->add(array(
       'template' => 'Ca/Represent.tpl',
     ));
+    if (isset($_COOKIE['signed_' . $form->_surveyId])) {
+      CRM_Utils_System::setTitle("");
+      return;
+    }
 
     $template = NULL;
     $result = civicrm_api3('MessageTemplate', 'get', array(
