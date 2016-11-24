@@ -37,8 +37,15 @@ class CRM_Ca_Page_Representatives extends CRM_Core_Page {
 
   function run() {
     $geocode = $_POST['geocode'];
-    $representatives = $targets = $reps = array();
-    $url = ENDPOINT . "/representatives/?point=" . $geocode[0] . "," . $geocode[1];
+    $representatives = $targets = $reps = $repObjects = array();
+    if (array_key_exists('postal_code', $geocode)) {
+      $url = ENDPOINT . "/postcodes/" . strtoupper(str_replace(' ', '', $geocode['postal_code']));
+      $isPostal = TRUE;
+    }
+    else {
+      $url = ENDPOINT . "/representativespostcodes/?point=" . $geocode[0] . "," . $geocode[1];
+      $isPostal = FALSE;
+    }
 
     // Get fixed group targets.
     $fixed = civicrm_api3('GroupContact', 'get', array(
@@ -55,8 +62,26 @@ class CRM_Ca_Page_Representatives extends CRM_Core_Page {
     }
 
     $representatives = CRM_Ca_BAO_Represent::getInfo($url);
-    if (!empty($representatives) && $representatives->meta->total_count > 0) {
-      foreach ($representatives->objects as $key => $values) {
+    $validDistricts = array(
+      "Ajax",
+      "Markham",
+      "Pickering",
+      "Uxbridge",
+      "Whitby",
+      "Whitchurch-Stouffville",
+    );
+    if ($isPostal) {
+      if (!empty($representatives)) {
+        $repObjects = array_merge($representatives->representatives_centroid, $representatives->representatives_concordance);
+      }
+    }
+    else {
+      if (!empty($representatives) && $representatives->meta->total_count > 0) {
+        $repObjects = $representatives->objects;
+      }
+    }
+    foreach ($repObjects as $key => $values) {
+      if (array_search($values->district_name, $validDistricts)) {
         $reps[] = array(
           'display_name' => $values->name,
           'url' => $values->url,
@@ -67,7 +92,11 @@ class CRM_Ca_Page_Representatives extends CRM_Core_Page {
         );
       }
     }
+    // Add fixed targets to local representatives.
     $master =  array_merge($targets, $reps);
+
+    // Sort by elected office.
+    $master = CRM_Ca_BAO_Represent::sort($master);
     if (!empty($master)) {
       echo json_encode($master);
     }

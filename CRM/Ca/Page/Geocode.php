@@ -47,6 +47,14 @@ class CRM_Ca_Page_Geocode extends CRM_Core_Page {
         echo json_encode($json);
         exit;
       }
+      else {
+        echo 0;
+        exit;
+      }
+    }
+    else {
+      echo 0;
+      exit;
     }
   }
 
