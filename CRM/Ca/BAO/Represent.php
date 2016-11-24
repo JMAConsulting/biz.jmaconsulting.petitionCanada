@@ -82,4 +82,53 @@ class CRM_Ca_BAO_Represent {
     return $details;
   }
 
+  public static function sort($reps) {
+    $repsSorted = $unSorted = array();
+    foreach ($reps as $keys => $values) {
+      if (!empty($values['elected_office'])) {
+        $office = str_replace(' ', '', $values['elected_office']);
+        if (empty($$office)) {
+          $$office = array($values);
+        }
+        else {
+          array_push($$office, $values);
+        }
+      }
+      else {
+        $emptyReps[] = $values;
+      }
+      $officeValues[] = $office;
+    }
+    $officeValues = array_map("unserialize", array_unique(array_map("serialize", $officeValues)));
+    $sortOrder = array(
+      "PrimeMinister", 
+      "FederalMinister", 
+      "MP", 
+      "Premier", 
+      "ProvincialMinister", 
+      "MPP", 
+      "Mayor", 
+      "Councillor",
+    );
+    $flip = array_flip($officeValues);
+    foreach ($sortOrder as $elected) {
+      unset($flip[$elected]);
+      if (!empty($$elected)) {
+        $repsSorted = array_merge($repsSorted, $$elected);
+      }
+      else {
+        $unSortedReps[] = '';
+      }
+    }
+    $officeValues = array_flip($flip);
+    foreach ($officeValues as $key => $val) {
+      $unSorted[] = $$val;
+    }
+    // Merge the rest which do not have elected offices.
+    $repsSorted = array_merge($repsSorted, $emptyReps);
+    // Remove duplicates.
+    $repsSorted = array_map("unserialize", array_unique(array_map("serialize", $repsSorted)));
+    return $repsSorted;
+  }
+  
 }

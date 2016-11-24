@@ -92,15 +92,7 @@ CRM.$(function($) {
           var trHTML = '';
           $.each(data, function (i, item) {
 	    repEmails.push(item.email);
-            trHTML += '<dl><dt><strong>';
-	    if (item.url) {
-              trHTML += '<a href='+ item.url +'>';
-            }
-	    trHTML += item.display_name;
-	    if (item.url) {
-	      trHTML += '</a>';
-            }
-            trHTML += '</strong></dt><dd><span>';
+	    trHTML += '<dl><dt class="rep-names"><strong>' + item.display_name + '</strong></dt><dd><span>';
 	    if (item.party_name) {
               trHTML += item.party_name;
             }
@@ -135,6 +127,11 @@ CRM.$(function($) {
 <style>
 #crm-container.crm-public .label {ldelim}
     font-size: 18px;
+{rdelim}
+
+.rep-names {ldelim}
+    font-size: 18px;
+    color: #7fb787;
 {rdelim}
 
 </style>
