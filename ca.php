@@ -331,7 +331,7 @@ function ca_civicrm_postProcess($formName, &$form) {
         'return' => array("help_pre"),
         'uf_group_id' => "petition_represent_extension",
         'field_type' => "Formatting",
-        'label' => "Representative Email",
+        'field_name' => "formatting_email",
       ));
 
       $message = $result['values'][0]['help_pre'];

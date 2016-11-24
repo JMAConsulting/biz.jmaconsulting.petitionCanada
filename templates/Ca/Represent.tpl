@@ -34,13 +34,22 @@ CRM.$(function($) {
     var reps = {};
     $.each( params, function( key, value ) {
       if (key == "country" || key == "state_province" || key == "state_province_id") {
-        address[key] = $("#" + value +" option:selected").val();
+        var selectval = $("#" + value +" option:selected").val();
+        if (typeof selectval !== 'undefined') {
+          address[key] = selectval;
+        }
       }
       else {
-        address[key] = $("#" + value).val();
+        var textval = $("#" + value).val();
+        if (typeof textval !== 'undefined') {
+          address[key] = textval;
+	}
       }
     });
     var geocode = getGeocode(address);
+    if (!geocode) {
+      geocode = address;
+    }
     getRepresentatives(geocode);
   });
 
@@ -59,8 +68,10 @@ CRM.$(function($) {
         address: address
       }
       }).responseText;
-    var response = $.parseJSON(geocode);
-    return response;
+    if (geocode) {
+      var response = $.parseJSON(geocode);
+      return response;
+    }
   }
 
   function getRepresentatives(geocode) {
@@ -120,3 +131,10 @@ CRM.$(function($) {
 });
 </script>
 {/literal}
+
+<style>
+#crm-container.crm-public .label {ldelim}
+    font-size: 18px;
+{rdelim}
+
+</style>
