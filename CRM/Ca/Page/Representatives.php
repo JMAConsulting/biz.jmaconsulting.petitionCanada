@@ -37,7 +37,6 @@ class CRM_Ca_Page_Representatives extends CRM_Core_Page {
 
   function run() {
     $geocode = $_POST['geocode'];
-    $geocode['postal_code'] = "L3R9W3";
     $representatives = $targets = $reps = $repObjects = array();
     if (array_key_exists('postal_code', $geocode)) {
       $url = ENDPOINT . "/postcodes/" . strtoupper(str_replace(' ', '', $geocode['postal_code']));
