@@ -213,7 +213,7 @@ function ca_civicrm_managed(&$entities) {
       ),
     ),
   );
-  // Create group for newsletters.
+  // Create group for signatures.
   $entities[] = array(
     'module' => 'biz.jmaconsulting.represent.opennorth.ca',
     'name' => 'groupcreate',
@@ -221,7 +221,7 @@ function ca_civicrm_managed(&$entities) {
     'entity' => 'Group',
     'params' => array(
       'title' => "Petition Signatures",
-      'name' => "petition_signature_newsletter",
+      'name' => "petition_signatures",
       'group_type' => "Mailing List",
       'version' => 3,
       'sequential' => 1,
@@ -295,11 +295,11 @@ function ca_civicrm_buildForm($formName, &$form) {
 function ca_civicrm_postProcess($formName, &$form) {
   if ($formName == "CRM_Campaign_Form_Petition_Signature") {
     $targets = $submittedTargets = $master = array();
-    // Add to newsletter group.
+    // Add to signature group.
     if (CRM_Utils_Array::value('is_subscribe', $form->_submitValues)) {
       $group = civicrm_api3('GroupContact', 'create', array(
         'sequential' => 1,
-        'group_id' => 'petition_signature_newsletter',
+        'group_id' => 'petition_signatures',
         'contact_id' => $form->_contactId,
         'status' => 'Added',
       ));
