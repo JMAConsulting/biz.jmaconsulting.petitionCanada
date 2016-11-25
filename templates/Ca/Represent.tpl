@@ -20,8 +20,36 @@
 {literal}
 <script type="text/javascript">
 CRM.$(function($) {
-  $("#draft_email_block").insertBefore(".crm-submit-buttons");
-  $("input[name='postal_code-Primary']").blur( function() {
+  $("#draft_email").insertBefore(".crm-submit-buttons");
+
+  if ($("input[name='representative_emails']").val()) {
+    address = getAddress();
+    var geocode = getGeocode(address);
+    if (!geocode) {
+      geocode = address;
+    }
+    getRepresentatives(geocode);
+  }
+
+  $("input[name='postal_code-Primary'], input[name='city-Primary'], input[name='street_address-Primary']").blur( function() {
+    var address = getAddress();
+    var geocode = getGeocode(address);
+    if (!geocode) {
+      geocode = address;
+    }
+    getRepresentatives(geocode);
+  });
+
+  $("input[name='country-Primary'], input[name='state_province-Primary']").change( function() {
+    var address = getAddress();
+    var geocode = getGeocode(address);
+    if (!geocode) {
+      geocode = address;
+    }
+    getRepresentatives(geocode);
+  });
+
+  function getAddress() {
     var params = {
       "street_address": "street_address-Primary",
       "city": "city-Primary",
@@ -46,12 +74,8 @@ CRM.$(function($) {
 	}
       }
     });
-    var geocode = getGeocode(address);
-    if (!geocode) {
-      geocode = address;
-    }
-    getRepresentatives(geocode);
-  });
+    return address;
+  }
 
   function getGeocode(address) {
     if ($.isEmptyObject(address)) {
@@ -134,4 +158,7 @@ CRM.$(function($) {
     color: #7fb787;
 {rdelim}
 
+#crm-container.crm-public input[type="text"] {ldelim}
+    font-size: 18px;
+{rdelim}
 </style>

@@ -101,13 +101,15 @@ class CRM_Ca_BAO_Represent {
     }
     $officeValues = array_map("unserialize", array_unique(array_map("serialize", $officeValues)));
     $sortOrder = array(
-      "PrimeMinister", 
-      "FederalMinister", 
-      "MP", 
-      "Premier", 
-      "ProvincialMinister", 
-      "MPP", 
-      "Mayor", 
+      "PrimeMinister",
+      "FederalMinister",
+      "MP",
+      "Premier",
+      "ProvincialMinister",
+      "MPP",
+      "Mayor",
+      "DeputyMayor",
+      "RegionalCouncillor",
       "Councillor",
     );
     $flip = array_flip($officeValues);
@@ -121,13 +123,39 @@ class CRM_Ca_BAO_Represent {
       }
     }
     $officeValues = array_flip($flip);
+
+    // Now construct the unsorted array.
     foreach ($officeValues as $key => $val) {
       $unSorted[] = $$val;
     }
+    foreach ($unSorted as $key => $unsort) {
+      foreach ($unsort as $k => $v) {
+        $unsortedReps[] = $v;
+      }
+    }
+
+    // Merge the unsorted array.
+    $repsSorted = array_merge($repsSorted, $unsortedReps);
     // Merge the rest which do not have elected offices.
     $repsSorted = array_merge($repsSorted, $emptyReps);
-    // Remove duplicates.
-    $repsSorted = array_map("unserialize", array_unique(array_map("serialize", $repsSorted)));
+
+    $repsSorted = self::dupeCheck($repsSorted);
+
+    return $repsSorted;
+  }
+
+  function dupeCheck($repsSorted) {
+    // Remove duplicates based on name, email.
+    foreach ($repsSorted as $key => $repres) {
+      $dupes[$key] = array('name' => $repres['display_name'], 'email' => $repres['email']);
+    }
+    $dupes = array_map("unserialize", array_unique(array_map("serialize", $dupes)));
+    // Now remove the dupes from the master array.
+    foreach ($repsSorted as $key => $values) {
+      if (!array_key_exists($key, $dupes)) {
+        unset($repsSorted[$key]);
+      }
+    }
     return $repsSorted;
   }
   
