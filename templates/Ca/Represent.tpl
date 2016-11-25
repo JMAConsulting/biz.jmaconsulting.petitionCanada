@@ -3,10 +3,7 @@
 {/if}
 
 {if !$duplicate}
-<div id="draft_email" class="crm-section editrow_draft_email-section form-item">
-  <div class="label">
-    <label for="draft_email">{$form.draft_email.label}</label>
-  </div>
+<div id="draft_email_block" class="crm-section editrow_draft_email-section form-item">
   <div class="content">
     {$form.draft_email.html}
   </div>
@@ -20,7 +17,7 @@
 {literal}
 <script type="text/javascript">
 CRM.$(function($) {
-  $("#draft_email").insertBefore(".crm-submit-buttons");
+  $("#draft_email_block").insertBefore(".crm-submit-buttons");
 
   if ($("input[name='representative_emails']").val()) {
     address = getAddress();
@@ -156,10 +153,15 @@ CRM.$(function($) {
 
 .rep-names {ldelim}
     font-size: 18px;
-    color: #7fb787;
+    color: #30853c;
 {rdelim}
 
-#crm-container.crm-public input[type="text"] {ldelim}
+#crm-container.crm-public input {ldelim}
     font-size: 18px;
 {rdelim}
+
+#crm-container .crm-title h1 {ldelim}
+    color: #30853c;
+{rdelim}
+
 </style>
