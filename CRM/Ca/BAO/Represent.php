@@ -83,7 +83,7 @@ class CRM_Ca_BAO_Represent {
   }
 
   public static function sort($reps) {
-    $repsSorted = $unSorted = array();
+    $repsSorted = $unSorted = $unsortedReps = $emptyReps = array();
     foreach ($reps as $keys => $values) {
       if (!empty($values['elected_office'])) {
         $office = str_replace(' ', '', $values['elected_office']);

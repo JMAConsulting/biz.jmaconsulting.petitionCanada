@@ -98,7 +98,9 @@ CRM.$(function($) {
   function getRepresentatives(geocode) {
     $body = $("#representatives");
     var repEmails = [];
+    var repNames = [];
     $("input[name='representative_emails']").val('');
+    $("input[name='representative_names']").val('');
     var dataUrl = {/literal}"{crmURL p='civicrm/getrepresentatives' h=0 }"{literal};
     $body.addClass("dataTables_processing");
     $.ajax({
@@ -113,13 +115,14 @@ CRM.$(function($) {
           var trHTML = '';
           $.each(data, function (i, item) {
 	    repEmails.push(item.email);
+	    repNames.push(item.display_name);
 	    trHTML += '<dl><dt class="rep-names"><strong>' + item.display_name + '</strong></dt><dd><span>';
-	    if (item.party_name) {
+	    /* if (item.party_name) {
               trHTML += item.party_name;
             }
             if (item.party_name && item.elected_office) {
               trHTML += ', ';
-            }
+            } */
 	    if (item.elected_office) {
               trHTML += item.elected_office;
             }
@@ -130,6 +133,8 @@ CRM.$(function($) {
 	    trHTML += '</dd></dl>';
           });
     	  $("input[name='representative_emails']").val(repEmails.join());
+    	  $("input[name='representative_names']").val('Dear ' + repNames.join(", "));
+	  $('#email_frozen').text('Dear ' + repNames.join(", "));
         }
         else {
           trHTML = '<div><span><h3 align-text="center">No local representatives found.</h3></span></div>';
