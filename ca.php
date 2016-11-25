@@ -277,6 +277,7 @@ function ca_civicrm_buildForm($formName, &$form) {
     }
 
     $form->add('hidden', 'representative_emails', NULL, array('readonly' => TRUE), FALSE);
+    $form->add('hidden', 'representative_names', NULL, array('readonly' => TRUE), FALSE);
     $form->addWysiwyg('draft_email', ts('Email'), NULL);
     $form->add('checkbox', 'is_subscribe', ts('Do you wish to receive further communications?'));
     $defaults = array('is_subscribe' => TRUE);
@@ -326,6 +327,9 @@ function ca_civicrm_postProcess($formName, &$form) {
 
     if (!empty($master)) {
       // Get frozen email text from profile.
+      if ($localNames = CRM_Utils_Array::value('representative_names', $form->_submitValues)) {
+        $message = $localNames . "<br/>";
+      }
       $result = civicrm_api3('UFField', 'get', array(
         'sequential' => 1,
         'return' => array("help_pre"),
@@ -334,7 +338,9 @@ function ca_civicrm_postProcess($formName, &$form) {
         'field_name' => "formatting_email",
       ));
 
-      $message = $result['values'][0]['help_pre'];
+      if ($result['values'][0]['help_pre']) {
+        $message .= $result['values'][0]['help_pre'];
+      }
 
       // Get rest of email from petition form.
       if (CRM_Utils_Array::value('draft_email', $form->_submitValues)) {
