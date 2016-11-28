@@ -19,6 +19,12 @@
 CRM.$(function($) {
   $("#draft_email_block").insertBefore(".crm-submit-buttons");
 
+  {/literal}{if !$contact_id}{literal}
+    limitFunctions();
+  {/literal}
+  {/if}
+  {literal}
+
   if ($("input[name='representative_emails']").val()) {
     address = getAddress();
     var geocode = getGeocode(address);
@@ -45,6 +51,21 @@ CRM.$(function($) {
     }
     getRepresentatives(geocode);
   });
+
+  function limitFunctions() {
+    var editor = CKEDITOR.instances['draft_email'];
+    if (editor) {
+      editor.destroy(true);
+    }
+    CKEDITOR.replace( 'draft_email',
+    {
+      toolbar : [
+        { name: 'basicstyles', items : [ 'Bold','Italic' ] },
+        { name: 'paragraph', items : [ 'NumberedList','BulletedList' ] },
+	{ name: 'tools', items : [ 'Maximize','-','About' ] }
+      ]
+    });
+  }
 
   function getAddress() {
     var params = {
