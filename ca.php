@@ -265,6 +265,9 @@ function ca_civicrm_buildForm($formName, &$form) {
       CRM_Utils_System::setTitle("");
       return;
     }
+    $cssURL = CRM_Core_Config::singleton()->extensionsURL;
+    $cssURL .= DIRECTORY_SEPARATOR . basename(__DIR__) . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . 'Ca' . DIRECTORY_SEPARATOR .  'ckstyle.css';
+    $form->assign('cssURL', $cssURL);
 
     $template = NULL;
     $result = civicrm_api3('MessageTemplate', 'get', array(
