@@ -121,6 +121,7 @@ CRM.$(function($) {
     $body = $("#representatives");
     var repEmails = [];
     var repNames = [];
+    var repInfo = [];
     $("input[name='representative_emails']").val('');
     $("input[name='representative_names']").val('');
     var dataUrl = {/literal}"{crmURL p='civicrm/getrepresentatives' h=0 }"{literal};
@@ -138,6 +139,15 @@ CRM.$(function($) {
           $.each(data, function (i, item) {
 	    repEmails.push(item.email);
 	    repNames.push(item.display_name);
+	    repInfo.push({
+              email: item.email,
+              name:  item.display_name,
+              first_name:  item.first_name,
+              last_name:  item.last_name,
+              title: item.elected_office,
+              party: item.party_name,
+              district: item.district_name
+            });
 	    trHTML += '<dl><dt class="rep-names"><strong>' + item.display_name + '</strong></dt><dd><span>';
 	    /* if (item.party_name) {
               trHTML += item.party_name;
@@ -155,7 +165,7 @@ CRM.$(function($) {
 	    trHTML += '</dd></dl>';
           });
     	  $("input[name='representative_emails']").val(repEmails.join());
-    	  $("input[name='representative_names']").val('Dear ' + repNames.join(", "));
+    	  $("input[name='representative_names']").val(JSON.stringify(repInfo));
 	  $('#email_frozen').text('Dear ' + repNames.join(", "));
         }
         else {

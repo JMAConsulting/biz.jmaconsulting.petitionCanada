@@ -183,12 +183,20 @@ function petitionCanada_civicrm_managed(&$entities) {
           'weight' => 9,
         ),
         array(
+          'label' => 'Email Frozen',
+          'field_name' => 'formatting_frozen',
+          'field_type' => 'Formatting',
+          'help_pre' => "<div id='email_frozen'></div>",
+          'is_active' => 1,
+          'weight' => 10,
+        ),
+        array(
           'label' => 'Representative Email',
           'field_name' => 'formatting_email',
           'field_type' => 'Formatting',
           'help_pre' => $email,
           'is_active' => 1,
-          'weight' => 10,
+          'weight' => 11,
         ),
       ),
     ),
@@ -331,7 +339,8 @@ function petitionCanada_civicrm_postProcess($formName, &$form) {
     if (!empty($master)) {
       // Get frozen email text from profile.
       if ($localNames = CRM_Utils_Array::value('representative_names', $form->_submitValues)) {
-        $message = $localNames . "<br/>";
+        $createdReps = CRM_Ca_BAO_Represent::createTarget($localNames);
+        $message = "Dear " . implode(', ', $createdReps) . "<br/>";
       }
       $result = civicrm_api3('UFField', 'get', array(
         'sequential' => 1,
@@ -360,8 +369,6 @@ function petitionCanada_civicrm_postProcess($formName, &$form) {
 
       $sent = CRM_Utils_Mail::send($params);
       if ($sent) {
-        $message .= "<br/>
-          <b>Email also sent to representatives:</b> {$master}";
         // Create activity.
         $activityParams = array(
           'activity_name' => 'Email',
@@ -369,7 +376,7 @@ function petitionCanada_civicrm_postProcess($formName, &$form) {
           'status_id' => 'Completed',
           'activity_date_time' => date('YmdHis'),
           'source_contact_id' => $form->_contactId,
-          'target_contact_id' => $form->_contactId,
+          'target_contact_id' => array_keys($createdReps),
           'assignee_contact_id' => $form->_contactId,
           'details' => $message,
           'version' => 3,
