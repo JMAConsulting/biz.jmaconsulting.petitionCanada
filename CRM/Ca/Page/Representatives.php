@@ -83,6 +83,8 @@ class CRM_Ca_Page_Representatives extends CRM_Core_Page {
     foreach ($repObjects as $key => $values) {
       if (array_search($values->district_name, $validDistricts)) {
         $reps[] = array(
+          'first_name' => $values->first_name,
+          'last_name' => $values->last_name,
           'display_name' => $values->name,
           'url' => $values->url,
           'district_name' => $values->district_name,

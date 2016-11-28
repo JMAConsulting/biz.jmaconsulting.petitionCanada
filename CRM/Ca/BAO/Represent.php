@@ -51,6 +51,8 @@ class CRM_Ca_BAO_Represent {
     }
     $returnProperties = array(
       "display_name",
+      "first_name",
+      "last_name",
       "email",
       CON,
       AFFN,
@@ -157,6 +159,36 @@ class CRM_Ca_BAO_Represent {
       }
     }
     return $repsSorted;
+  }
+
+  public static function createTarget($targets) {
+    $targets = json_decode($targets);
+    $repContact = $reps = array();
+    foreach ($targets as $key => $value) {
+      $repContact['first_name'] = $value->first_name;
+      $repContact['last_name'] = $value->last_name;
+      $repContact['email'] = $value->email;
+      $repContact['contact_type'] = 'Individual';
+      $repContact['version'] = 3;
+      $dedupeParams = CRM_Dedupe_Finder::formatParams($repContact, 'Individual');
+      $dedupeParams['check_permission'] = FALSE;
+      $dupes = CRM_Dedupe_Finder::dupesByParams($dedupeParams, 'Individual');
+      if (count($dupes) > 0) {
+        $repContact['contact_id'] = $dupes[0];
+      }
+      if (isset($value->district_name)) {
+        $repContact[CON] = $value->district_name;
+      }
+      if (isset($value->party_name)) {
+        $repContact[AFFN] = $value->party_name;
+      }
+      if (isset($value->elected_office)) {
+        $repContact[TITLE] = $value->elected_office;
+      }
+      $contact = civicrm_api3('Contact', 'create', $repContact);
+      $reps[$contact['id']] = CRM_Contact_BAO_Contact::displayName($contact['id']);
+    }
+    return $reps;
   }
   
 }
