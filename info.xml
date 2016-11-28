@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<extension key="biz.jmaconsulting.represent.opennorth.ca" type="module">
-  <file>ca</file>
+<extension key="biz.jmaconsulting.petitionCanada" type="module">
+  <file>petitionCanada</file>
   <name>Represent OpenNorth CA</name>
   <description>Petitions using Represent OpenNorth CA API</description>
   <license>AGPL-3.0</license>

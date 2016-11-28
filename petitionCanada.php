@@ -5,15 +5,15 @@ define('CON', 'custom_1');
 define('AFFN', 'custom_2');
 define('TITLE', 'custom_3');
 
-require_once 'ca.civix.php';
+require_once 'petitionCanada.civix.php';
 
 /**
  * Implementation of hook_civicrm_config
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_config
  */
-function ca_civicrm_config(&$config) {
-  _ca_civix_civicrm_config($config);
+function petitionCanada_civicrm_config(&$config) {
+  _petitionCanada_civix_civicrm_config($config);
 }
 
 /**
@@ -23,8 +23,8 @@ function ca_civicrm_config(&$config) {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_xmlMenu
  */
-function ca_civicrm_xmlMenu(&$files) {
-  _ca_civix_civicrm_xmlMenu($files);
+function petitionCanada_civicrm_xmlMenu(&$files) {
+  _petitionCanada_civix_civicrm_xmlMenu($files);
 }
 
 /**
@@ -32,8 +32,8 @@ function ca_civicrm_xmlMenu(&$files) {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_install
  */
-function ca_civicrm_install() {
-  _ca_civix_civicrm_install();
+function petitionCanada_civicrm_install() {
+  _petitionCanada_civix_civicrm_install();
   // Enable Campaign if not enabled.
   $components = CRM_Core_Component::getEnabledComponents();
   if (!array_key_exists('CiviCampaign', $components)) {
@@ -51,8 +51,8 @@ function ca_civicrm_install() {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_uninstall
  */
-function ca_civicrm_uninstall() {
-  _ca_civix_civicrm_uninstall();
+function petitionCanada_civicrm_uninstall() {
+  _petitionCanada_civix_civicrm_uninstall();
 }
 
 /**
@@ -60,8 +60,8 @@ function ca_civicrm_uninstall() {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_enable
  */
-function ca_civicrm_enable() {
-  _ca_civix_civicrm_enable();
+function petitionCanada_civicrm_enable() {
+  _petitionCanada_civix_civicrm_enable();
 }
 
 /**
@@ -69,8 +69,8 @@ function ca_civicrm_enable() {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_disable
  */
-function ca_civicrm_disable() {
-  _ca_civix_civicrm_disable();
+function petitionCanada_civicrm_disable() {
+  _petitionCanada_civix_civicrm_disable();
 }
 
 /**
@@ -84,8 +84,8 @@ function ca_civicrm_disable() {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_upgrade
  */
-function ca_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
-  return _ca_civix_civicrm_upgrade($op, $queue);
+function petitionCanada_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
+  return _petitionCanada_civix_civicrm_upgrade($op, $queue);
 }
 
 /**
@@ -96,12 +96,12 @@ function ca_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_managed
  */
-function ca_civicrm_managed(&$entities) {
+function petitionCanada_civicrm_managed(&$entities) {
   // Create petition profile.
   $representatives = "<hr><div id='representatives'><i>Please enter your address above to view list of representatives here.</i></div><hr>";
   $email = "Please edit this field to enter the email text which will be frozen on petition page.";
   $entities[] = array(
-    'module' => 'biz.jmaconsulting.represent.opennorth.ca',
+    'module' => 'biz.jmaconsulting.petitionCanada',
     'name' => 'petitionprofile',
     'update' => 'never',
     'entity' => 'UFGroup',
@@ -195,7 +195,7 @@ function ca_civicrm_managed(&$entities) {
   );
   // Create petition and add profile created above to petition.
   $entities[] = array(
-    'module' => 'biz.jmaconsulting.represent.opennorth.ca',
+    'module' => 'biz.jmaconsulting.petitionCanada',
     'name' => 'petitioncreate',
     'update' => 'never',
     'entity' => 'Survey',
@@ -215,7 +215,7 @@ function ca_civicrm_managed(&$entities) {
   );
   // Create group for signatures.
   $entities[] = array(
-    'module' => 'biz.jmaconsulting.represent.opennorth.ca',
+    'module' => 'biz.jmaconsulting.petitionCanada',
     'name' => 'groupcreate',
     'update' => 'never',
     'entity' => 'Group',
@@ -227,7 +227,7 @@ function ca_civicrm_managed(&$entities) {
       'sequential' => 1,
     ),
   );
-  _ca_civix_civicrm_managed($entities);
+  _petitionCanada_civix_civicrm_managed($entities);
 }
 
 /**
@@ -239,8 +239,8 @@ function ca_civicrm_managed(&$entities) {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_caseTypes
  */
-function ca_civicrm_caseTypes(&$caseTypes) {
-  _ca_civix_civicrm_caseTypes($caseTypes);
+function petitionCanada_civicrm_caseTypes(&$caseTypes) {
+  _petitionCanada_civix_civicrm_caseTypes($caseTypes);
 }
 
 /**
@@ -248,15 +248,15 @@ function ca_civicrm_caseTypes(&$caseTypes) {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_alterSettingsFolders
  */
-function ca_civicrm_alterSettingsFolders(&$metaDataFolders = NULL) {
-  _ca_civix_civicrm_alterSettingsFolders($metaDataFolders);
+function petitionCanada_civicrm_alterSettingsFolders(&$metaDataFolders = NULL) {
+  _petitionCanada_civix_civicrm_alterSettingsFolders($metaDataFolders);
 }
 
 /**
  * Implementation of hook_civicrm_buildForm
  *
  */
-function ca_civicrm_buildForm($formName, &$form) {
+function petitionCanada_civicrm_buildForm($formName, &$form) {
   if ($formName == "CRM_Campaign_Form_Petition_Signature") {
     CRM_Core_Region::instance('form-body')->add(array(
       'template' => 'Ca/Represent.tpl',
@@ -273,7 +273,7 @@ function ca_civicrm_buildForm($formName, &$form) {
     $result = civicrm_api3('MessageTemplate', 'get', array(
       'sequential' => 1,
       'return' => array("msg_html"),
-      'msg_title' => "OpenNorth",
+      'msg_title' => "PetitionCanada",
     ));
     if ($result['count'] > 0) {
       $template = $result['values'][0]['msg_html'];
@@ -295,7 +295,7 @@ function ca_civicrm_buildForm($formName, &$form) {
  * Implementation of hook_civicrm_postProcess
  *
  */
-function ca_civicrm_postProcess($formName, &$form) {
+function petitionCanada_civicrm_postProcess($formName, &$form) {
   if ($formName == "CRM_Campaign_Form_Petition_Signature") {
     $targets = $submittedTargets = $master = array();
     // Add to signature group.
