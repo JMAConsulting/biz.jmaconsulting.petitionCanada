@@ -65,6 +65,7 @@ CRM.$(function($) {
 	{ name: 'tools', items : [ 'Maximize','-','About' ] }
       ]
     });
+    CKEDITOR.config.contentsCss = '{/literal}{$cssURL}{literal}';
   }
 
   function getAddress() {
@@ -189,5 +190,4 @@ CRM.$(function($) {
 #crm-container .crm-title h1 {ldelim}
     color: #30853c;
 {rdelim}
-
 </style>
