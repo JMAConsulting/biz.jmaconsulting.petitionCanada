@@ -63,7 +63,6 @@ CRM.$(function($) {
       toolbar : [
         { name: 'basicstyles', items : [ 'Bold','Italic' ] },
         { name: 'paragraph', items : [ 'NumberedList','BulletedList' ] },
-	{ name: 'tools', items : [ 'Maximize','-','About' ] }
       ]
     });
   }
