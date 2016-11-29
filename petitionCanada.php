@@ -4,6 +4,7 @@ define('ENDPOINT', 'https://represent.opennorth.ca/');
 define('CON', 'custom_1');
 define('AFFN', 'custom_2');
 define('TITLE', 'custom_3');
+define('PETITION_PROFILE_NAME', 'petition_represent_extension');
 
 require_once 'petitionCanada.civix.php';
 
@@ -259,12 +260,65 @@ function petitionCanada_civicrm_caseTypes(&$caseTypes) {
 function petitionCanada_civicrm_alterSettingsFolders(&$metaDataFolders = NULL) {
   _petitionCanada_civix_civicrm_alterSettingsFolders($metaDataFolders);
 }
+/**
+ * Implementation of hook_civicrm_pageRun
+ *
+ */
+
+function petitionCanada_civicrm_pageRun(&$page) {
+  if ('CRM_UF_Page_Field' == $page->getVar('_name')) {
+    $groupName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFGroup', $page->getVar('_gid'), 'name');
+    if ($groupName != PETITION_PROFILE_NAME) {
+      return FALSE;
+    }
+    $ufFields = $page->get_template_vars('ufField');
+    $restrictFields = array(
+      'first_name',
+      'last_name',
+      'postal_code',
+      'email',
+    );
+    foreach ($ufFields as $fieldID => $fields) {
+      $action = array_sum(array_keys(CRM_UF_Page_Field::actionLinks()));
+      if (in_array($fields['field_name'], $restrictFields)) {
+        $action -= CRM_Core_Action::ENABLE;
+        $action -= CRM_Core_Action::DISABLE;
+      }
+      elseif ($fields['is_active']) {
+        $action -= CRM_Core_Action::ENABLE;
+      }
+      else {
+        $action -= CRM_Core_Action::DISABLE;
+      }
+      $action -= CRM_Core_Action::DELETE;
+      $ufFields[$fieldID]['action'] = CRM_Core_Action::formLink(CRM_UF_Page_Field::actionLinks(),
+        $action,
+        array(
+          'id' => $fields['id'],
+          'gid' => $fields['uf_group_id'],
+        ),
+        ts('more'),
+        FALSE,
+        'ufField.row.actions',
+        'UFField',
+        $fields['id']
+      );
+    }
+    $page->assign('ufField', $ufFields);
+  }
+}
 
 /**
  * Implementation of hook_civicrm_buildForm
  *
  */
 function petitionCanada_civicrm_buildForm($formName, &$form) {
+  if ('CRM_UF_Form_Field' == $formName && ($form->getVar('_action') & CRM_Core_Action::UPDATE)) {
+    $groupName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFGroup', $form->getVar('_gid'), 'name');
+    if ($groupName == PETITION_PROFILE_NAME) {
+      $form->_elements[$form->_elementIndex['field_name']]->freeze();
+    }
+  }
   if ($formName == "CRM_Campaign_Form_Petition_Signature") {
     CRM_Core_Region::instance('form-body')->add(array(
       'template' => 'Ca/Represent.tpl',
