@@ -342,17 +342,6 @@ function petitionCanada_civicrm_postProcess($formName, &$form) {
         $createdReps = CRM_Ca_BAO_Represent::createTarget($localNames);
         $message = "Dear " . implode(', ', $createdReps) . "<br/>";
       }
-      $result = civicrm_api3('UFField', 'get', array(
-        'sequential' => 1,
-        'return' => array("help_pre"),
-        'uf_group_id' => "petition_represent_extension",
-        'field_type' => "Formatting",
-        'field_name' => "formatting_email",
-      ));
-
-      if ($result['values'][0]['help_pre']) {
-        $message .= $result['values'][0]['help_pre'];
-      }
 
       // Get rest of email from petition form.
       if (CRM_Utils_Array::value('draft_email', $form->_submitValues)) {
