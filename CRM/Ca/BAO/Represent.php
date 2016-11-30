@@ -88,12 +88,31 @@ class CRM_Ca_BAO_Represent {
     $repsSorted = $unSorted = $unsortedReps = $emptyReps = array();
     foreach ($reps as $keys => $values) {
       if (!empty($values['elected_office'])) {
-        $office = str_replace(' ', '', $values['elected_office']);
-        if (empty($$office)) {
-          $$office = array($values);
+        if (strpos($values['elected_office'], "Minister of") !== FALSE && strpos($values['elected_office'], "Parliamentary Secretary") === FALSE
+          && strpos($values['email'], "parl.gc.ca") !== FALSE) {
+          if (empty($FederalMinister)) {
+            $FederalMinister = array($values);
+          }
+          else {
+            array_push($FederalMinister, $values);
+          }
+        }
+        elseif (strpos($values['elected_office'], "Parliamentary Secretary") !== FALSE && strpos($values['email'], "parl.gc.ca") !== FALSE) {
+          if (empty($FederalParliamentarySecretary)) {
+            $FederalParliamentarySecretary = array($values);
+          }
+          else {
+            array_push($FederalParliamentarySecretary, $values);
+          }
         }
         else {
-          array_push($$office, $values);
+          $office = str_replace(' ', '', $values['elected_office']);
+          if (empty($$office)) {
+            $$office = array($values);
+          }
+          else {
+            array_push($$office, $values);
+          }
         }
       }
       else {
@@ -101,10 +120,12 @@ class CRM_Ca_BAO_Represent {
       }
       $officeValues[] = $office;
     }
+
     $officeValues = array_map("unserialize", array_unique(array_map("serialize", $officeValues)));
     $sortOrder = array(
       "PrimeMinister",
       "FederalMinister",
+      "FederalParliamentarySecretary",
       "MP",
       "Premier",
       "ProvincialMinister",
