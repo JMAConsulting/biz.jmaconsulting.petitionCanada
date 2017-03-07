@@ -41,6 +41,10 @@ class CRM_Ca_Page_Geocode extends CRM_Core_Page {
       if (CRM_Utils_Array::value('country', $data['address'])) {
         $data['address']['country'] = CRM_Core_PseudoConstant::country($data['address']['country']);
       }
+      else {
+        // Set default country to Canada if not selected.
+        $data['address']['country'] = "Canada";
+      }
       CRM_Utils_Geocode_Google::format($data['address']);
       if (isset($data['address']['geo_code_1']) && isset($data['address']['geo_code_2'])) {
         $json = array($data['address']['geo_code_1'], $data['address']['geo_code_2']);
