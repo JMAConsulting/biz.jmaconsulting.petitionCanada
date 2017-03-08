@@ -20,7 +20,9 @@ CRM.$(function($) {
   $("#draft_email_block").insertBefore(".crm-submit-buttons");
 
   {/literal}{if !$contact_id}{literal}
-    limitFunctions();
+    window.onload = function() {
+      limitFunctions();
+    }
   {/literal}
   {/if}
   {literal}
