@@ -147,7 +147,7 @@ CRM.$(function($) {
               party: item.party_name,
               district: item.district_name
             });
-	    trHTML += '<dl><dt class="rep-names"><strong>' + item.display_name + '</strong>';
+	    trHTML += '<dl><dt><strong class="rep-names">' + item.display_name + '</strong>';
             if (item.elected_office) {
               trHTML += ' (' + item.elected_office + ') ';
             }
