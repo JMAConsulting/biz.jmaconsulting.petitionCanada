@@ -26,7 +26,9 @@ CRM.$(function($) {
   {/literal}
   {/if}
   {literal}
-  CKEDITOR.config.contentsCss = '{/literal}{$cssURL}{literal}';
+  window.onload = function() {
+    CKEDITOR.config.contentsCss = '{/literal}{$cssURL}{literal}';
+  }
 
   if ($("input[name='representative_emails']").val()) {
     address = getAddress();
