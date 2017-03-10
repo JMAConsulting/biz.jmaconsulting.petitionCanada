@@ -151,21 +151,11 @@ CRM.$(function($) {
               party: item.party_name,
               district: item.district_name
             });
-	    trHTML += '<dl><dt class="rep-names"><strong>' + item.display_name + '</strong></dt><dd><span>';
-	    /* if (item.party_name) {
-              trHTML += item.party_name;
+	    trHTML += '<dl><dt class="rep-names"><strong>' + item.display_name + '</strong>';
+            if (item.elected_office) {
+              trHTML += ' (' + item.elected_office + ') ';
             }
-            if (item.party_name && item.elected_office) {
-              trHTML += ', ';
-            } */
-	    if (item.elected_office) {
-              trHTML += item.elected_office;
-            }
-            trHTML += '</span>';
-	    if (item.email) {
-              trHTML += ' (<a href=mailto:'+ item.email +'>' + item.email + '</a>)';
-            }
-	    trHTML += '</dd></dl>';
+            trHTML += '</dt></dl>';
           });
     	  $("input[name='representative_emails']").val(repEmails.join());
     	  $("input[name='representative_names']").val(JSON.stringify(repInfo));
@@ -184,23 +174,3 @@ CRM.$(function($) {
 });
 </script>
 {/literal}
-
-<style>
-
-#crm-container.crm-public .label {ldelim}
-    font-size: 18px;
-{rdelim}
-
-.rep-names {ldelim}
-    font-size: 18px;
-    color: #30853c;
-{rdelim}
-
-#crm-container.crm-public input {ldelim}
-    font-size: 18px;
-{rdelim}
-
-#crm-container .crm-title h1 {ldelim}
-    color: #30853c;
-{rdelim}
-</style>

@@ -1,0 +1,21 @@
+#crm-container.crm-public .label {
+    font-size: 18px;
+}
+
+.rep-names {
+    font-size: 18px;
+    color: #30853c;
+}
+
+#crm-container.crm-public input {
+    font-size: 18px;
+}
+
+#crm-container .crm-title h1 {
+    color: #30853c;
+}
+
+#representatives {
+    line-height: 50%;
+}
+
