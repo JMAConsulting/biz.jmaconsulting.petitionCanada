@@ -323,6 +323,7 @@ function petitionCanada_civicrm_buildForm($formName, &$form) {
     CRM_Core_Region::instance('form-body')->add(array(
       'template' => 'Ca/Represent.tpl',
     ));
+    CRM_Core_Resources::singleton()->addStyleFile('biz.jmaconsulting.petitionCanada', 'css/civiPetition.css');
     if (isset($_COOKIE['signed_' . $form->_surveyId])) {
       CRM_Utils_System::setTitle("");
       return;
