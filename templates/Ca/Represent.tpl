@@ -4,10 +4,10 @@
 
 {if !$duplicate}
 <div id="draft_email_block" class="crm-section editrow_draft_email-section form-item">
-  <div class="content">
+  <div class="draft_email">
     {$form.draft_email.html}
   </div>
-  <div class="content">
+  <div class="is_subscribe">
     {$form.is_subscribe.html}&nbsp;{$form.is_subscribe.label}
   </div>
   <div class="clear"></div>
